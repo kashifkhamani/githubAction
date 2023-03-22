@@ -1,0 +1,20 @@
+name: Expo Build and Deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo npm install -g expo-cli
+          yarn install
+      - name: Build and publish
+        run: |
+          expo login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
+          expo build:android -t apk --non-interactive --no-publish
+          expo build:ios --non-interactive --no-publish
+          expo publish --non-interactive
